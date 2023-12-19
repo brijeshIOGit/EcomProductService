@@ -1,15 +1,16 @@
 package com.bky.EcomProductService.controller;
 
 import com.bky.EcomProductService.dto.ProductListResponseDTO;
+import com.bky.EcomProductService.dto.ProductRequestDTO;
 import com.bky.EcomProductService.dto.ProductResponseDTO;
+import com.bky.EcomProductService.exception.ProductNotFoundException;
 import com.bky.EcomProductService.model.Product;
 import com.bky.EcomProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -55,12 +56,20 @@ public class ProductController {
 
     }
 
-    @GetMapping("/product/1")
-    public ResponseEntity getProductFromId(){
+    @GetMapping("/product/{id}")
+    public ResponseEntity getProductFromId(@PathVariable int id) throws ProductNotFoundException {
 
-        ProductResponseDTO response = productService.getProductById(1);
+        ProductResponseDTO response = productService.getProductById(id);
         return ResponseEntity.ok(response);
 
+    }
+
+    @PostMapping("/product")
+    public ResponseEntity createProduct(@RequestBody ProductRequestDTO productRequestDTO){
+
+        ProductResponseDTO productResponseDTO = productService.createProduct(productRequestDTO);
+
+        return ResponseEntity.ok(productResponseDTO);
     }
 
 }
